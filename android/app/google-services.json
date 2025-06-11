@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "35731241256",
+    "firebase_url": "https://medimate-f69db-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "medimate-f69db",
+    "storage_bucket": "medimate-f69db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35731241256:android:b53a82970ce082d8be381d",
+        "android_client_info": {
+          "package_name": "com.example.medimate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35731241256-je5dmnilce67dapge8kob7m4ubn3tf2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medimate",
+            "certificate_hash": "51678b0689300becc3a186b177e0d8c829dc1b85"
+          }
+        },
+        {
+          "client_id": "35731241256-qhpc8j8saokobspd634mmvmeo0lpsjdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbwXv9CuT8KGzAjvb2m9zBn9Nb7ShWO4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35731241256-qhpc8j8saokobspd634mmvmeo0lpsjdo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "35731241256-iljvhse9lvsbp4ihg3ga62qsme7a64p3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.medimate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35731241256:android:dca94a707204b6b7be381d",
+        "android_client_info": {
+          "package_name": "com.example.medimate3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35731241256-6am1362d85uuohjpiruq4og96s7sn5ug.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medimate3",
+            "certificate_hash": "51678b0689300becc3a186b177e0d8c829dc1b85"
+          }
+        },
+        {
+          "client_id": "35731241256-qhpc8j8saokobspd634mmvmeo0lpsjdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbwXv9CuT8KGzAjvb2m9zBn9Nb7ShWO4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35731241256-qhpc8j8saokobspd634mmvmeo0lpsjdo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "35731241256-iljvhse9lvsbp4ihg3ga62qsme7a64p3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.medimate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
