@@ -43,8 +43,9 @@ Medication non-adherence can lead to serious health issues, especially among the
 - Raspberry Pi checks schedule and dispenses tablets on time.
 - App receives and displays:
     - ✔️ Tablet dispensed
-    - ❌ Missed dose
+    - ❌ Missed dose and Record
     - ⚠️ Low inventory alert
+    - 🔔 Notification
 
 ---
 
@@ -76,13 +77,14 @@ Medication non-adherence can lead to serious health issues, especially among the
 ## 📸 Demo Screenshots (Optional)
 
 Add your app UI and hardware images here.
-
+![img.png](img.png) ![img_1.png](img_1.png)
+![img_2.png](img_2.png) ![img_3.png](img_3.png)
+![img_4.png](img_4.png) ![img_5.png](img_5.png)
 ---
 
 ## 🤝 Contributors
 
 - Shrinidhi Achar — App & System Developer
-- [Your Team / Mentors]
 
 ---
 
