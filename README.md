@@ -76,11 +76,21 @@ Medication non-adherence can lead to serious health issues, especially among the
 
 ## 📸 Demo Screenshots (Optional)
 
-Add your app UI and hardware images here.
-![img.png](img.png) ![img_1.png](img_1.png)
-![img_2.png](img_2.png) ![img_3.png](img_3.png)
-![img_4.png](img_4.png) ![img_5.png](img_5.png)
----
+<p align="center">
+  <img src="img.png" width="300"/> &nbsp;
+  <img src="img_1.png" width="300"/>
+</p>
+
+<p align="center">
+  <img src="img_2.png" width="300"/> &nbsp;
+  <img src="img_3.png" width="300"/>
+</p>
+
+<p align="center">
+  <img src="img_4.png" width="300"/> &nbsp;
+  <img src="img_5.png" width="300"/>
+</p>
+
 
 ## 🤝 Contributors
 
