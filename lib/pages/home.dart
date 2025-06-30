@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Key _refreshKey = UniqueKey();
   late AnimationController _rotationController;
   bool isResetting = false; // for rotating refresh button
-
+  Map<String, Map<String, double>> Medi_dose = {};
 
 
   void _refreshPage() {
@@ -69,12 +69,26 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       duration: const Duration(seconds: 1),
     );
     db.copyFromDoseToCheck();
+    Mediname_dose();
+    Mediname_dose();
     _loadData().then((_) {
       updateCalenderdaylist();
     });
     AwesomeNotifications().resetGlobalBadge();
 
 
+  }
+
+  Future<void> Mediname_dose()async {
+    for (var medication in db.medicationDoseList) {
+      Map<String, double> timeToDose = {};
+
+      for (var interval in medication.timeIntervals) {
+        timeToDose[interval.time] = interval.dosage;
+      }
+
+      Medi_dose[medication.name] = timeToDose;
+    }
   }
 
 
@@ -220,7 +234,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void checkMedicationReminder(List<Map<String, dynamic>> medications) {
     String currentTime = DateFormat('hh:mm a').format(DateTime.now());
-
+    //Mediname_dose();
     for (var med in medications) {
       if (med['time'] == currentTime) {
          int len=med['medications'].length;
@@ -503,7 +517,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Text(
-                            "▶ $medName",
+                            "▶ $medName ",
                             style: GoogleFonts.roboto(
                               color: Theme.of(context).colorScheme.inversePrimary,
                               fontWeight: FontWeight.w600,
@@ -511,12 +525,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             ),
                           ),
                         );
-                      }).toList(),
+                      }
+                      ).toList()
+
+                    ,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          "${nextMedicine?['time'] ?? ""} ${}",
+                          "${nextMedicine?['time'] ?? ""} ",
                           style: GoogleFonts.roboto(
                             color: Theme.of(context).colorScheme.inversePrimary,
                             fontWeight: FontWeight.w600,
