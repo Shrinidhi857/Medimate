@@ -58,8 +58,16 @@ class _MeditileState extends State<Meditile> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: (widget.medication.quantity >=0)
+              ? Color.fromARGB(50, 27, 245, 27)
+              : Color.fromARGB(50, 255, 116, 108),
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: (widget.medication.quantity >=0)
+                ? Color.fromARGB(100, 27, 245, 27)
+                : Color.fromARGB(100, 255, 116, 108),
+            width: 2,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,9 +80,12 @@ class _MeditileState extends State<Meditile> {
                   "💊 ${widget.medication.name} ",
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Text("Total:${widget.medication.quantity}",
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
+                (widget.medication.quantity > 0)
+                    ? Text("Total: ${widget.medication.quantity}",
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+                    : Text("❗No Tablets Left",
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+
               ],
             ),
             const SizedBox(height: 10),
@@ -94,7 +105,7 @@ class _MeditileState extends State<Meditile> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Text(
-                  "⏱️ ${timeEntry.time}   Dose: ${timeEntry.dosage}",
+                  "⏱️ ${timeEntry.time}   Dose: ${timeEntry.dosage}mg",
                   style: const TextStyle(fontSize: 14),
                 ),
               );

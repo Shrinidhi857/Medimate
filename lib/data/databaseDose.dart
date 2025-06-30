@@ -45,26 +45,36 @@ class MedicationDatabaseDose {
   // Convert dose data to check data and save it
   Future<void> copyFromDoseToCheck() async {
     await loadData(); // Ensure dose list is loaded
-    List<MedicationChecked> convertedList = [];
+    List<MedicationChecked> newCheckList = [];
+
+    // Create a map for fast lookup of existing checked states
+    Map<String, Map<String, bool>> existingCheckStatus = {};
+    for (var med in medicationCheckList) {
+      existingCheckStatus[med.name] = {
+        for (var t in med.timeIntervals) t.time: t.isChecked
+      };
+    }
 
     for (MedicationDose dose in medicationDoseList) {
       List<TimeEntryCheck> checkIntervals = dose.timeIntervals.map((t) {
+        bool isChecked = existingCheckStatus[dose.name]?[t.time] ?? false;
+
         return TimeEntryCheck(
           time: t.time,
-          isChecked: false,
+          isChecked: isChecked,
         );
       }).toList();
 
-      convertedList.add(MedicationChecked(
+      newCheckList.add(MedicationChecked(
         name: dose.name,
         timeIntervals: checkIntervals,
       ));
     }
 
     // Save locally
-    medicationCheckList = convertedList;
+    medicationCheckList = newCheckList;
     await _doseBox.put("MEDIMATE", medicationCheckList.map((med) => med.toMap()).toList());
-    developer.log("✅ Copied from dose to check and saved to Hive", name: 'MedicationDB');
+    developer.log("✅ Copied from dose to check (preserving checks) and saved to Hive", name: 'MedicationDB');
 
     // Push to remote databases
     await updateDatabase();
@@ -167,6 +177,8 @@ class MedicationDatabaseDose {
         medicationDoseList = doseSnapshot.docs.map((doc) =>
             MedicationDose.fromMap(doc.data())
         ).toList();
+
+        for(MedicationDose medi in medicationDoseList)
 
         // Save to Hive
         await _doseBox.put("MEDIMATE_DOSE", medicationDoseList.map((med) => med.toMap()).toList());

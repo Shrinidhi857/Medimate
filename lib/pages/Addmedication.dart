@@ -287,7 +287,7 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                               side: BorderSide(
-                                color: Theme.of(context).colorScheme.secondary,
+                                color: Color.fromARGB(200, 3, 129, 255),
                                 width: 2,
                               ),
                             ),

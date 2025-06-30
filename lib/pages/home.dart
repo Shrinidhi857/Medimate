@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
@@ -11,6 +12,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medimate/components/TimeEntryCheck.dart';
+import 'package:medimate/components/medicationDose.dart';
 import 'package:medimate/data/databaseDose.dart';
 import 'package:medimate/pages/Addmedication.dart';
 import '../components/Homepage_medicationtile.dart';
@@ -70,6 +72,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _loadData().then((_) {
       updateCalenderdaylist();
     });
+    AwesomeNotifications().resetGlobalBadge();
+
 
   }
 
@@ -179,6 +183,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       await docRef.update({'timeIntervals': timeList});
       print("☑️ Updated isChecked");
     }
+    for(MedicationChecked medi in db.medicationCheckList){
+      if(medi.name==medicationName){
+        for(int i=0;i<medi.timeIntervals.length;i++){
+          medi.timeIntervals[timeIndex].isChecked=true;
+        }
+      }
+    }
+    db.updateDatabase();
 
   }
 
@@ -213,13 +225,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (med['time'] == currentTime) {
          int len=med['medications'].length;
          String mediname="";
-        for(int i=0;i<len;i++)mediname =mediname+" ${med['medications'][i]}";
+        for(int i=0;i<len;i++)mediname =mediname+" ${med['medications'][i]} \n";
          AwesomeNotifications().createNotification(
            content: NotificationContent(
              id: 1,
              channelKey: 'medication_reminder',
-             title: "Time to Take 💊",
-             body: "${mediname}",
+             title: "⏲️ Time to Take ",
+             body: "💊 Medicine: **${mediname.toUpperCase()}**",
            ),
          );
         print("Time to take: ${mediname}");
@@ -239,7 +251,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       checkMedicationReminder(medications);
       final now = DateTime.now();
 
-      if(now.hour==5 && now.minute==46) reset();
+      if(now.hour==12) reset();
     });
   }
 
@@ -341,15 +353,30 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       }
     }
   }
-  Future<void> reset()async {
-        for (MedicationChecked med in dbdose.medicationCheckList) {
-          for (TimeEntryCheck t in med.timeIntervals) {
-            t.isChecked = false;
-          }
-        }
+  Future<void> reset() async {
+    // Step 1: Reset in dbdose
+    for (MedicationChecked med in dbdose.medicationCheckList) {
+      for (TimeEntryCheck t in med.timeIntervals) {
+        t.isChecked = false;
+      }
+    }
 
-        dbdose.updateDatabase();
+    await dbdose.updateDatabase();
+
+    // Step 2: Sync reset data into db
+    db.medicationCheckList = List<MedicationChecked>.from(
+      dbdose.medicationCheckList.map((med) => MedicationChecked(
+        name: med.name,
+        timeIntervals: med.timeIntervals.map((t) => TimeEntryCheck(
+          time: t.time,
+          isChecked: t.isChecked,
+        )).toList(),
+      )),
+    );
+
+    await db.updateDatabase();
   }
+
 
 
 
@@ -489,7 +516,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          nextMedicine?['time'] ?? "",
+                          "${nextMedicine?['time'] ?? ""} ${}",
                           style: GoogleFonts.roboto(
                             color: Theme.of(context).colorScheme.inversePrimary,
                             fontWeight: FontWeight.w600,
@@ -511,6 +538,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             final selectedMeds =
                                 nextMedicine?['medications'] ?? [];
 
+                            for (MedicationDose medd in db.medicationDoseList) {
+                              if (selectedMeds.contains(medd.name)) {
+                                medd.quantity -= 1;
+                              }
+                            }
+                            await db.updateDatabase(); // ✅ Save changes
                             for (MedicationChecked medi in db.medicationCheckList) {
                               for (int i = 0; i < medi.timeIntervals.length; i++) {
                                 final interval = medi.timeIntervals[i];
@@ -519,7 +552,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     interval.time == targetTime) {
                                   interval.isChecked = true;
                                   await db.RTDOOR.update({medi.name:true});
-
 
                                   await updateIsChecked(
                                       userId!, medi.name, i, true);
@@ -617,6 +649,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   user?.displayName ?? "User",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+
+                    Text(
+                      userId??"unavailable",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 10
+                      ),
+                    ),
+                    TextButton(onPressed: (){
+                      Clipboard.setData(new ClipboardData(text: userId??"Invalid"));
+
+                    }, child: Icon(Icons.copy,color: Theme.of(context).colorScheme.secondary,)),
+                  ],
+                ),
+
 
                 SizedBox(height: 30),
                 GestureDetector(
