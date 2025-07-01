@@ -199,6 +199,10 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
 
   // Show dialog to create new medication
   void createMediItem() {
+    medinamecontroller.clear();
+    timecontroller.clear();
+    dosecontroller.clear();
+    quantitycontroller.clear();
     showDialog(
       context: context,
       builder: (context) {

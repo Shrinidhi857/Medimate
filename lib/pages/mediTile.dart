@@ -58,12 +58,12 @@ class _MeditileState extends State<Meditile> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: (widget.medication.quantity >=0)
+          color: (widget.medication.quantity >0)
               ? Color.fromARGB(50, 27, 245, 27)
               : Color.fromARGB(50, 255, 116, 108),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: (widget.medication.quantity >=0)
+            color: (widget.medication.quantity >0)
                 ? Color.fromARGB(100, 27, 245, 27)
                 : Color.fromARGB(100, 255, 116, 108),
             width: 2,
@@ -104,9 +104,18 @@ class _MeditileState extends State<Meditile> {
 
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Text(
-                  "⏱️ ${timeEntry.time}   Dose: ${timeEntry.dosage}mg",
-                  style: const TextStyle(fontSize: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "⏱️ ${timeEntry.time}",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    Text(
+                      "Dose: ${timeEntry.dosage}mg",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
                 ),
               );
             }).toList(),

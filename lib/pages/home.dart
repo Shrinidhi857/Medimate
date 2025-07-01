@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       }
 
       Medi_dose[medication.name] = timeToDose;
+
     }
   }
 
@@ -368,16 +369,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     }
   }
   Future<void> reset() async {
-    // Step 1: Reset in dbdose
+    // 🧠 Step 0: Load latest dose list from Hive or Firestore (whichever is your source)
+    await dbdose.loadData();  // ✅ This loads the data into dbdose.medicationCheckList
+
+    // Step 1: Reset all isChecked to false
     for (MedicationChecked med in dbdose.medicationCheckList) {
       for (TimeEntryCheck t in med.timeIntervals) {
         t.isChecked = false;
       }
     }
 
+    // Step 2: Persist the reset data
     await dbdose.updateDatabase();
 
-    // Step 2: Sync reset data into db
+    // Step 3: Copy to active medication list
     db.medicationCheckList = List<MedicationChecked>.from(
       dbdose.medicationCheckList.map((med) => MedicationChecked(
         name: med.name,
@@ -388,8 +393,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       )),
     );
 
-    await db.updateDatabase();
+    await db.updateDatabase(); // Save into your main database
   }
+
 
 
 
@@ -490,8 +496,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             });
                             _rotationController.repeat();
 
-                            await reset();
                             _refreshPage();
+                            await reset();
 
                             _rotationController.stop();
                             setState(() {
@@ -501,6 +507,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           child: isResetting
                               ? CircularProgressIndicator(
                             color: Theme.of(context).colorScheme.inversePrimary,
+                            padding: EdgeInsets.all(10),
                           )
                               : Icon(
                             Icons.refresh,
@@ -638,9 +645,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   )
               ),
               // Fixed code: Safely handle the case when db.medicationList is null
-              if (db.medicationCheckList != null)
-                ...List.generate(db.medicationCheckList.length, (index) {
-                  return HomePageMedi(medication: db.medicationCheckList[index], db: db);
+              if (dbdose.medicationDoseList != null)
+                ...List.generate(dbdose.medicationDoseList.length, (index) {
+                  return HomePageMedi(medication: dbdose.medicationDoseList[index], db: db);
                 }),
             ],
           ),
