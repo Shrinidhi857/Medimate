@@ -106,4 +106,4 @@ This project is for educational and healthcare prototyping purposes. Contact the
 
 ## 📬 Contact
 
-For questions or contributions, email: **shrinidhi857@gmail.com**
+For questions or contributions, email: **shrinidhiachar857@gmail.com**
