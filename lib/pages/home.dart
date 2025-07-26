@@ -69,8 +69,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       duration: const Duration(seconds: 1),
     );
     db.copyFromDoseToCheck();
-    Mediname_dose();
-    Mediname_dose();
     _loadData().then((_) {
       updateCalenderdaylist();
     });
@@ -109,6 +107,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
 
   Future<void> _loadData() async {
+
+    await dbdose.loadData();
+    await db.loadData();// Load data into dbdose
+    setState(() {});
+
     if (userId != null) {
       db.medicationCheckList = await loadMedications(userId!);
       final sortedMedication= await findNextDose(db.medicationCheckList);
@@ -116,11 +119,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       final notTaken = await findNotTaken(sortedMedication);
       setState(() {
         nextMedicine = notTaken;
+        _isLoading = false;
       });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Future<void> saveMedication(String userId, MedicationChecked medication) async {
@@ -235,7 +236,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void checkMedicationReminder(List<Map<String, dynamic>> medications) {
     String currentTime = DateFormat('hh:mm a').format(DateTime.now());
-    //Mediname_dose();
     for (var med in medications) {
       if (med['time'] == currentTime) {
          int len=med['medications'].length;
@@ -321,6 +321,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return null;
   }
 
+
+
   Future<List<Map<String, dynamic>>> markAsTaken(List<Map<String, dynamic>> sortedMedication) async {
     final currentMedi = await findNotTaken(sortedMedication); // ✅ await the async function
 
@@ -342,13 +344,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       }
     }
 
-
-
     // Optional: persist the updated data
     await db.updateDatabase(); // 🔄 Save updated list to Firestore/Hive/RTDB
-
     return sortedMedication;
   }
+
+
   Future<void> updateCalenderdaylist() async{
     final todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final targetTime = nextMedicine?['time'] ?? '';
@@ -394,6 +395,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
 
     await db.updateDatabase(); // Save into your main database
+    setState(() {});
+
   }
 
 
@@ -554,7 +557,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             });
 
                             await _loadData();
-                            await db.loadData();
+                            //await db.loadData();
 
                             final todayDate =
                             DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -575,7 +578,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 if (selectedMeds.contains(medi.name) &&
                                     interval.time == targetTime) {
                                   interval.isChecked = true;
-                                  await db.RTDOOR.update({medi.name:true});
 
                                   await updateIsChecked(
                                       userId!, medi.name, i, true);
@@ -587,6 +589,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     medicationName: medi.name,
                                     isChecked: true,
                                   );
+                                  await db.RTDOOR.update({medi.name:true});
+
                                 } else {
                                   await updateRTDBCalendar(
                                     userId: userId!,

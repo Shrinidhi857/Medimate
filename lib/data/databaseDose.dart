@@ -36,11 +36,6 @@ class MedicationDatabaseDose {
     developer.log("\n✅ Hive dose list initialized\n", name: 'MedicationDoseDB');
   }
 
-  Future<void> doorClose() async{
-    for(MedicationDose med in medicationDoseList){
-     await RTDOOR.update({med.name:false});
-    }
-  }
 
   // Convert dose data to check data and save it
   Future<void> copyFromDoseToCheck() async {
@@ -105,7 +100,7 @@ class MedicationDatabaseDose {
         'quantity': med.quantity,
         'timeIntervals': _timeEntryDoseToMap(med.timeIntervals),
       });
-      await RTDOOR.update({med.name:false});
+      //await RTDOOR.update({med.name:false});
 
       developer.log("✅ RTDB: Dose for '${med.name}' inserted.", name: 'MedicationDoseDB');
     } catch (e) {
@@ -116,7 +111,8 @@ class MedicationDatabaseDose {
   // Save data to RTDB helper method for check data
   Future<void> _saveToRTDBCheck(MedicationChecked med) async {
     try {
-      await RTDOOR.update({med.name:false});
+      //
+      //await RTDOOR.update({med.name:false});
       await RTDBC.child(med.name).set({
         'timeIntervals': _timeEntryCheckToMap(med.timeIntervals),
       });
@@ -129,7 +125,7 @@ class MedicationDatabaseDose {
   // Load all data from local and remote sources
   Future<void> loadData() async {
     // Load dose data from Hive
-    await doorClose();
+    //await doorClose();
     final rawDose = _doseBox.get("MEDIMATE_DOSE");
     if (rawDose is List) {
       try {
