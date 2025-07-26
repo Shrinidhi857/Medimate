@@ -87,8 +87,8 @@ Medication non-adherence can lead to serious health issues, especially among the
 </p>
 
 <p align="center">
-  <img src="img_4.png" width="300"/> &nbsp;
-  <img src="img_5.png" width="300"/>
+  <img src="img_6.png" width="300"/> &nbsp;
+  <img src="img_7.png" width="300"/>
 </p>
 
 
